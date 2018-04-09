@@ -24,7 +24,7 @@
                 </ul>
             </div>
             <div class="down">
-                <button class="button">登出</button>
+                <button class="button" @click="onLogOut">登出</button>
             </div>
         </aside>
         <main>
@@ -125,38 +125,38 @@
             </div>
         </main>
 
-        <div v-show="loginVisible" class="login">
+        <div v-show="loginVisible" class="login" @submit.prevent="onLogin">
             <form class="form">
                 <h2>登录</h2>
                 <button @click="loginVisible = false">关闭</button>
                 <div class="row">
                     <label>邮箱</label>
-                    <input type="text">
+                    <input type="text" v-model="login.email">
                 </div>
                 <div class="row">
                     <label>密码</label>
-                    <input type="password">
+                    <input type="password" v-model="login.password">
                 </div>
                 <div class="actions">
-                    <button>提交</button>
+                    <button type="submit">提交</button>
                     <a href="#" @click="signUpVisible=true; loginVisible= false">注册</a>
                 </div>
             </form>
         </div>
-        <div v-show="signUpVisible" class="signUp">
+        <div v-show="signUpVisible" class="signUp" @submit.prevent="onSignUp">
             <form class="form">
                 <h2>注册</h2>
                 <button @click="signUpVisible = false">关闭</button>
                 <div class="row">
                     <label>邮箱</label>
-                    <input type="text">
+                    <input type="text" v-model="signUp.email">
                 </div>
                 <div class="row">
                     <label>密码</label>
-                    <input type="password">
+                    <input type="password" v-model="signUp.password">
                 </div>
                 <div class="actions">
-                    <button>提交</button>
+                    <button type="submit">提交</button>
                     <a href="#" @click="signUpVisible=false; loginVisible= true">登录</a>
                 </div>
             </form>
