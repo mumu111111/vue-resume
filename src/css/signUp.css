@@ -1,15 +1,15 @@
-.login{
+.signUp{
     position: fixed;
     min-width: 300px;
     min-height: 400px;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
-    background: #ddd;
+    transform: translate(-50%, -50%);
+    background: #ccc;
     display: flex;
     justify-content: center;
     align-items: stretch;
 }
-.login > .form{
+.signUp > .form{
     width: 100%;
 }
