@@ -4,6 +4,11 @@ let app= new Vue({
         editingName: false,
         loginVisible: false,
         signUpVisible:false,
+        currentUser:{
+            id: undefined,
+            email: '',
+            fuck: 'fuck'
+        },
         resume:{
             name: '姓名',
             gender: '女',
@@ -28,9 +33,10 @@ let app= new Vue({
         },
         onLogin(e){
             AV.User.logIn(this.login.email,this.login.password)
-            .then(function(user){
-                console.log(user)
-            }, function(error){
+            .then((user)=>{
+                this.currentUser.id= user.id
+                this.currentUser.email= user.attributes.email
+            },(error)=>{
                 if(error.code=== 211){
                     alert('邮箱不存在')
                 }else if(error.code=== 210){
@@ -38,14 +44,19 @@ let app= new Vue({
                 }
             })
         },
+        onLogOut(){
+            AV.User.logOut()
+            alert('注销成功')
+            window.location.reload()
+        },
         onSignUp(e){
-            const user = new AV.User()
+            const user = new AV.User() //创建用户
             user.setUsername(this.signUp.email)
             user.setPassword(this.signUp.password)
             user.setEmail(this.signUp.email)
-            user.signUp().then(function (user){
+            user.signUp().then((user)=>{
                 console.log(user)
-            }, function(error){
+            },(error)=>{
             })
         },
         onClickSave(){
@@ -56,17 +67,17 @@ let app= new Vue({
                 this.saveResume()
             }
         },
-        onLogOut(){
-            AV.User.logOut()
-            alert('注销成功')
-            window.location.reload()
-        },
+      
         saveResume(){
             let {id}= AV.User.current()
             let user= AV.Object.createWithoutData('User', id)
             user.set('resume', this.resume)
             user.save()
-        },
-
+        }
     }
 })
+//获取当前用户
+let currentUser= AV.User.current()
+if(currentUser){
+    app.currentUser= currentUser.toJSON()
+}
