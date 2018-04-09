@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/resume.css">
     <link rel="stylesheet" href="./css/editable-span.css">
+    <link rel="stylesheet" href="./css/login.css">
 </head>
 
 <body>
@@ -14,7 +15,7 @@
         <aside>
             <div class="upper">
                 <ul class="actions">
-                    <li><button class="button">保存</button></li>
+                    <li><button class="button" @click="onClickSave">保存</button></li>
                     <li><button class="button">分享</button></li>
                     <li><button class="button">打印</button></li>
                     <li><button class="button">换肤</button></li>
@@ -120,35 +121,16 @@
 
                 </section>
             </div>
-<script src="../vendors/av-min.js"></script>
-<script src="./js/av.js"></script>
-<script src="../vendors/vue.min.js"></script>
-<script src="./js/editable-span.js"></script>
-<script src="./js/app.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </main>
+        <div class="login">
+            登录
+        </div>
     </div>
-
+    <script src="../vendors/av-min.js"></script>
+    <script src="./js/av.js"></script>
+    <script src="../vendors/vue.min.js"></script>
+    <script src="./js/editable-span.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 
 </html>
