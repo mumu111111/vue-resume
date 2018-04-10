@@ -29,7 +29,6 @@
         </aside>
         <main>
             <div class="resume">
-            {{resume}}
                 <section class="profile">
                     <h1>
                         <editable-span :value="resume.name" @edit="onEdit('name', $event)"></editable-span>
@@ -52,10 +51,10 @@
                     <ul>
 
                         <li v-for="skill,index in resume.skills">
-                            <editable-span class="name" :value="skill.name" @edit="onEdit(`skills[${index}].name`, $event)"></editable-span>   
+                            <editable-span class="name" :value="skill.name" @edit="onEdit(`skills[${index}].name`, $event)"></editable-span>
                             <div class="description">
                                 <editable-span :value="skill.description" @edit="onEdit(`skills[${index}].description`, $event)"></editable-span>
-                            </div>      
+                            </div>
                             <span class="remove" v-if="index>=4" @click="removeSkill(index)">x</span>
                         </li>
                         <li>
@@ -66,55 +65,31 @@
                 <section class="projects">
                     <h2>项目经历</h2>
                     <ol>
-                        <li>
+                        <li v-for="project,index in resume.projects">
                             <header>
                                 <div class="start">
-                                    <h3 class="name">我的作品</h3>
-                                    <span class="link">http://xxxx/xx</span>
+                                    <h3 class="name">
+                                        <editable-span :value="project.name" @edit="onEdit(`projects[${index}].name`, $event)"></editable-span>
+                                    </h3>
+                                    <span class="link">
+                                            <editable-span :value="project.link" @edit="onEdit(`projects[${index}].link`, $event)"></editable-span>
+                                    </span>
                                 </div>
                                 <div class="end">
-                                    <span class="keywords">关键词：CSS3、jQuery、响应式</span>
+                                    <span class="keywords">
+                                            <editable-span :value="project.keywords" @edit="onEdit(`projects[${index}].keywords`, $event)"></editable-span>
+                                    </span>
                                 </div>
                             </header>
-                            <p class="description">请简单描述一下你是怎么做的这个项目</p>
+                            <p class="description">
+                                <editable-span :value="project.description" @edit="onEdit(`projects[${index}].description`, $event)"></editable-span>
+                            </p>
+                            <span class="remove" @click="removeProject(index)" v-if="index>=2">x</span>
                         </li>
                         <li>
-                            <header>
-                                <div class="start">
-                                    <h3 class="name">我的作品</h3>
-                                    <span class="link">http://xxxx/xx</span>
-                                </div>
-                                <div class="end">
-                                    <span class="keywords">关键词：CSS3、jQuery、响应式</span>
-                                </div>
-                            </header>
-                            <p class="description">请简单描述一下你是怎么做的这个项目</p>
+                            <span @click="addProject()">添加</span>
                         </li>
 
-                        <li>
-                            <header>
-                                <div class="start">
-                                    <h3 class="name">我的作品</h3>
-                                    <span class="link">http://xxxx/xx</span>
-                                </div>
-                                <div class="end">
-                                    <span class="keywords">关键词：CSS3、jQuery、响应式</span>
-                                </div>
-                            </header>
-                            <p class="description">请简单描述一下你是怎么做的这个项目</p>
-                        </li>
-                        <li>
-                            <header>
-                                <div class="start">
-                                    <h3 class="name">我的作品</h3>
-                                    <span class="link">http://xxxx/xx</span>
-                                </div>
-                                <div class="end">
-                                    <span class="keywords">关键词：CSS3、jQuery、响应式</span>
-                                </div>
-                            </header>
-                            <p class="description">请简单描述一下你是怎么做的这个项目</p>
-                        </li>
                     </ol>
 
                 </section>

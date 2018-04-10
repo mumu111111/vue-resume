@@ -21,8 +21,13 @@ let app= new Vue({
                 {name: '请填写技能名称', description: '请填写技能描述'},
                 {name: '请填写技能名称', description: '请填写技能描述'},
                 {name: '请填写技能名称', description: '请填写技能描述'},
+            ],
+            projects: [
+                {name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'},
+                {name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'}
             ]
         },
+
         login:{
             email: '',
             password: ''
@@ -31,20 +36,13 @@ let app= new Vue({
             email: '',
             password: ''
         }
-    
     },
     methods: {
         onEdit(key,value){//修改的value放到resume中
             //key  =  skills[${index}].name = name值（字符串），并不是name
             let regex= /\[(\d+)\]/g 
-        //     key = key.replace(regex, (match, number)=>{`.${number}`
-        //     console.log(number)
-        // }) 
-        key = key.replace(regex, (match, number) => `.${number}`)
-        console.log(key)
-            
-      
-
+            key = key.replace(regex, (match, number) => `.${number}`)
+            console.log(key)
             //key = skills.0.name
            let  keys= key.split('.') //[skills, 0, name]
 
@@ -57,7 +55,6 @@ let app= new Vue({
                     result= result[keys[i]]
                 }
             }
-            
         },
         hasLogin(){
             return !!this.currentUser.objectId
@@ -131,7 +128,15 @@ let app= new Vue({
         },
         removeSkill(index){
             this.resume.skills.splice(index, 1)//删除第index个
+        },
+        addProject(){
+                
+                this.resume.projects.push({name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'})
+        },
+        removeProject(index){
+            this.resume.projects.splice(index, 1)
         }
+        
     }
 })
 //获取当前用户
