@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./css/editable-span.css">
     <link rel="stylesheet" href="./css/login.css">
     <link rel="stylesheet" href="./css/signUp.css">
-
+    <link href="css/share.css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
             <div class="upper">
                 <ul class="actions">
                     <li><button class="button" @click="onClickSave">保存</button></li>
-                    <li><button class="button">分享</button></li>
+                    <li><button class="button" @click="shareVisible= true">分享</button></li>
                     <li><button class="button">打印</button></li>
                     <li><button class="button">换肤</button></li>
                 </ul>
@@ -131,6 +131,14 @@
                     <a href="#" @click="signUpVisible=false; loginVisible= true">登录</a>
                 </div>
             </form>
+        </div>
+        <div class="share" v-show="shareVisible" v-cloak>
+            <h2>
+                请复制下面的链接，在新窗口打开
+            </h2>
+            <div>
+                <textarea readonly>{{shareLink}}</textarea>
+            </div>
         </div>
     </div>
     <script src="../vendors/av-min.js"></script>

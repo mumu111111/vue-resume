@@ -4,6 +4,7 @@ let app= new Vue({
         editingName: false,
         loginVisible: false,
         signUpVisible:false,
+        shareVisible: false,
         currentUser:{
             objectId: undefined,
             email: '',
@@ -35,7 +36,8 @@ let app= new Vue({
         signUp:{
             email: '',
             password: ''
-        }
+        },
+        shareLink: '不知道'
     },
     methods: {
         onEdit(key,value){//修改的value放到resume中
@@ -143,5 +145,6 @@ let app= new Vue({
 let currentUser= AV.User.current()
 if(currentUser){
     app.currentUser= currentUser.toJSON()
+    app.shareLink= location.origin + location.pathname + '?user_Id='+ app.currentUser.objectId
     app.getResume() 
 }
