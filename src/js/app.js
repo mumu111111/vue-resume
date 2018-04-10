@@ -15,7 +15,13 @@ let app= new Vue({
             birthday: '1994年4月',
             jobTitle: '前端工程师',
             phone: '13266666666',
-            email: 'example@example.com'
+            email: 'example@example.com',
+            skills: [
+                {name: '请填写技能名称', description: '请填写技能描述'},
+                {name: '请填写技能名称', description: '请填写技能描述'},
+                {name: '请填写技能名称', description: '请填写技能描述'},
+                {name: '请填写技能名称', description: '请填写技能描述'},
+            ]
         },
         login:{
             email: '',
@@ -29,7 +35,29 @@ let app= new Vue({
     },
     methods: {
         onEdit(key,value){//修改的value放到resume中
-            this.resume[key] = value
+            //key  =  skills[${index}].name = name值（字符串），并不是name
+            let regex= /\[(\d+)\]/g 
+        //     key = key.replace(regex, (match, number)=>{`.${number}`
+        //     console.log(number)
+        // }) 
+        key = key.replace(regex, (match, number) => `.${number}`)
+        console.log(key)
+            
+      
+
+            //key = skills.0.name
+           let  keys= key.split('.') //[skills, 0, name]
+
+            console.log(keys)
+            let result= this.resume
+            for(let i=0; i< keys.length; i++){
+                if(i=== keys.length-1){ //一般最后一个i的value就是key
+                    result[keys[i]]= value //为value找到对应的key
+                }else{
+                    result= result[keys[i]]
+                }
+            }
+            
         },
         hasLogin(){
             return !!this.currentUser.objectId
@@ -37,10 +65,8 @@ let app= new Vue({
         onLogin(e){
             AV.User.logIn(this.login.email,this.login.password)
             .then((user)=>{
-                // this.currentUser.id= user.id
-                // this.currentUser.email= user.attributes.email
-                user= user.toJSON()//对象转换为JSON
-                this.currentUser.objectId= user.objectId//将数据库user的属性传给data的currentUser中
+                user= user.toJSON()//序列化user
+                this.currentUser.objectId= user.objectId//将数据库user的属性传给本地的currentUser中
                 this.currentUser.email= user.email
                 this.loginVisible= false
                 alert('登录成功')
@@ -69,7 +95,7 @@ let app= new Vue({
                 this.currentUser.email= user.email
                 this.signUpVisible= false
             },(error)=>{
-                alert(error.rawMessage)
+                alert(error.rawMessage)//返回错误描述
             })
         },
         onClickSave(){
@@ -90,14 +116,21 @@ let app= new Vue({
                 alert('保存失败')
             })
         },
-        getResume(){//通过id获取对应的resume信息
+        getResume(){//通过id获取用户保存过的resume数据
             var query= new AV.Query('User')
             query.get(this.currentUser.objectId)
                 .then((user)=>{
                     let resume= user.toJSON().resume
-                    this.resume= resume
+                    // this.resume= resume
+                    Object.assign(this.resume, resume)
                 }, (error)=>{
                 })
+        },
+        addSkill(){
+            this.resume.skills.push({name:'请填写技能名称',description:'请填写技能描述'})
+        },
+        removeSkill(index){
+            this.resume.skills.splice(index, 1)//删除第index个
         }
     }
 })
@@ -105,5 +138,5 @@ let app= new Vue({
 let currentUser= AV.User.current()
 if(currentUser){
     app.currentUser= currentUser.toJSON()
-    app.getResume()
+    app.getResume() 
 }
