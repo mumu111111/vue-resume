@@ -7,8 +7,7 @@ let app= new Vue({
         shareVisible: false,
         currentUser:{
             objectId: undefined,
-            email: '',
-            fuck: 'fuck'
+            email: ''
         },
         previewUser:{//预览用户
             objectId: undefined
@@ -41,7 +40,7 @@ let app= new Vue({
             email: '',
             password: ''
         },
-        shareLink: '不知道',
+        shareLink: '请编辑保存后再来查看',
         mode: 'edit' //preview
     },
     computed:{
@@ -155,6 +154,9 @@ let app= new Vue({
         },
         removeProject(index){
             this.resume.projects.splice(index, 1)
+        },
+        print(){
+            window.print()
         }
         
     }
