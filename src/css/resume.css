@@ -54,4 +54,19 @@
 .resume .projects header .start{
     
 }
-        
+.skills > ul >li,
+.projects > ol > li{
+    position: relative;
+}
+.skills > ul > li .remove,
+.projects > ol > li .remove
+{
+    position: absolute;
+    top: -5px;
+    right: 5px;
+    cursor: pointer;
+}       
+.skills > ul > li .add,
+.projects > ol > li .add{
+    cursor: pointer;
+}

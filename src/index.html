@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="./css/editable-span.css">
     <link rel="stylesheet" href="./css/login.css">
     <link rel="stylesheet" href="./css/signUp.css">
-    <link href="css/share.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="./css/share.css" />
 </head>
 
 <body>
     <div class="page" id="app">
-        <aside>
+        <aside v-show="mode==='edit'">
             <div class="upper">
                 <ul class="actions">
                     <li><button class="button" @click="onClickSave">保存</button></li>
@@ -31,67 +31,65 @@
             <div class="resume">
                 <section class="profile">
                     <h1>
-                        <editable-span :value="resume.name" @edit="onEdit('name', $event)"></editable-span>
+                        <editable-span :displayed="mode==='preview'" :value="displayResume.name" @edit="onEdit('name', $event)"></editable-span :displayed="mode==='preview'">
                     </h1>
                     <p>应聘职位：
-                        <editable-span :value="resume.jobTitle" @edit="onEdit('jobTitle', $event)"></editable-span>
+                        <editable-span :displayed="mode==='preview'" :value="displayResume.jobTitle" @edit="onEdit('jobTitle', $event)"></editable-span :displayed="mode==='preview'">
                     </p>
                     <p class="userprofile">
-                        <editable-span :value="resume.birthday" @edit="onEdit('birthday', $event)"></editable-span>
+                        <editable-span :displayed="mode==='preview'" :value="displayResume.birthday" @edit="onEdit('birthday', $event)"></editable-span :displayed="mode==='preview'">
                         |
-                        <editable-span :value="resume.gender" @edit="onEdit('gender', $event)"></editable-span>
+                        <editable-span :displayed="mode==='preview'" :value="displayResume.gender" @edit="onEdit('gender', $event)"></editable-span :displayed="mode==='preview'">
                         |
-                        <editable-span :value="resume.email" @edit="onEdit('email', $event)"></editable-span>
+                        <editable-span :displayed="mode==='preview'" :value="displayResume.email" @edit="onEdit('email', $event)"></editable-span :displayed="mode==='preview'">
                         |
-                        <editable-span :value="resume.phone" @edit="onEdit('phone', $event)"></editable-span>
+                        <editable-span :displayed="mode==='preview'" :value="displayResume.phone" @edit="onEdit('phone', $event)"></editable-span :displayed="mode==='preview'">
                     </p>
                 </section>
                 <section class="skills">
                     <h2>技能</h2>
                     <ul>
 
-                        <li v-for="skill,index in resume.skills">
-                            <editable-span class="name" :value="skill.name" @edit="onEdit(`skills[${index}].name`, $event)"></editable-span>
+                        <li v-for="skill,index in displayResume.skills">
+                            <editable-span :displayed="mode==='preview'" class="name" :value="skill.name" @edit="onEdit(`skills[${index}].name`, $event)"></editable-span :displayed="mode==='preview'">
                             <div class="description">
-                                <editable-span :value="skill.description" @edit="onEdit(`skills[${index}].description`, $event)"></editable-span>
+                                <editable-span :displayed="mode==='preview'" :value="skill.description" @edit="onEdit(`skills[${index}].description`, $event)"></editable-span :displayed="mode==='preview'">
                             </div>
-                            <span class="remove" v-if="index>=4" @click="removeSkill(index)">x</span>
+                            <span class="remove" v-if="index>=4 && mode==='edit'" @click="removeSkill(index)">x</span>
                         </li>
-                        <li>
-                            <span @click="addSkill">添加</span>
+                        <li v-if="mode==='edit'">
+                            <span class="add" @click="addSkill">添加</span>
                         </li>
                     </ul>
                 </section>
                 <section class="projects">
                     <h2>项目经历</h2>
                     <ol>
-                        <li v-for="project,index in resume.projects">
+                        <li v-for="project,index in displayResume.projects">
                             <header>
                                 <div class="start">
                                     <h3 class="name">
-                                        <editable-span :value="project.name" @edit="onEdit(`projects[${index}].name`, $event)"></editable-span>
+                                        <editable-span :displayed="mode==='preview'" :value="project.name" @edit="onEdit(`projects[${index}].name`, $event)"></editable-span :displayed="mode==='preview'">
                                     </h3>
                                     <span class="link">
-                                            <editable-span :value="project.link" @edit="onEdit(`projects[${index}].link`, $event)"></editable-span>
+                                            <editable-span :displayed="mode==='preview'" :value="project.link" @edit="onEdit(`projects[${index}].link`, $event)"></editable-span :displayed="mode==='preview'">
                                     </span>
                                 </div>
                                 <div class="end">
                                     <span class="keywords">
-                                            <editable-span :value="project.keywords" @edit="onEdit(`projects[${index}].keywords`, $event)"></editable-span>
+                                            <editable-span :displayed="mode==='preview'" :value="project.keywords" @edit="onEdit(`projects[${index}].keywords`, $event)"></editable-span :displayed="mode==='preview'">
                                     </span>
                                 </div>
                             </header>
                             <p class="description">
-                                <editable-span :value="project.description" @edit="onEdit(`projects[${index}].description`, $event)"></editable-span>
+                                <editable-span :displayed="mode==='preview'" :value="project.description" @edit="onEdit(`projects[${index}].description`, $event)"></editable-span :displayed="mode==='preview'">
                             </p>
-                            <span class="remove" @click="removeProject(index)" v-if="index>=2">x</span>
+                            <span class="remove" @click="removeProject(index)" v-if="index>=2 && mode==='edit'">x</span>
                         </li>
-                        <li>
-                            <span @click="addProject()">添加</span>
+                        <li v-if="mode==='edit'">
+                            <span class="add" @click="addProject()">添加</span>
                         </li>
-
                     </ol>
-
                 </section>
             </div>
         </main>
@@ -99,7 +97,7 @@
         <div v-show="loginVisible" class="login" v-cloak>
             <form class="form" @submit.prevent="onLogin">
                 <h2>登录</h2>
-                <button @click="loginVisible = false">关闭</button>
+                <button type="button" @click="loginVisible = false">关闭</button>
                 <div class="row">
                     <label>邮箱</label>
                     <input type="text" v-model="login.email">
@@ -117,7 +115,7 @@
         <div v-show="signUpVisible" class="signUp" v-cloak>
             <form class="form" @submit.prevent="onSignUp">
                 <h2>注册</h2>
-                <button @click="signUpVisible = false">关闭</button>
+                <button type="button" @click="signUpVisible = false">关闭</button>
                 <div class="row">
                     <label>邮箱</label>
                     <input type="text" v-model="signUp.email">
@@ -133,6 +131,7 @@
             </form>
         </div>
         <div class="share" v-show="shareVisible" v-cloak>
+            <button type="button" @click="shareVisible = false">关闭</button>
             <h2>
                 请复制下面的链接，在新窗口打开
             </h2>
@@ -140,6 +139,7 @@
                 <textarea readonly>{{shareLink}}</textarea>
             </div>
         </div>
+        <button class="exitPreview" @click="mode='edit'" v-if="mode==='preview'">退出预览</button>
     </div>
     <script src="../vendors/av-min.js"></script>
     <script src="./js/av.js"></script>

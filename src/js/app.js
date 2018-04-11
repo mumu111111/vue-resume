@@ -10,6 +10,10 @@ let app= new Vue({
             email: '',
             fuck: 'fuck'
         },
+        previewUser:{//预览用户
+            objectId: undefined
+        },
+        previewResume:{},
         resume:{
             name: '姓名',
             gender: '女',
@@ -37,7 +41,20 @@ let app= new Vue({
             email: '',
             password: ''
         },
-        shareLink: '不知道'
+        shareLink: '不知道',
+        mode: 'edit' //preview
+    },
+    computed:{
+        displayResume(){
+            return this.mode==='preview'? this.previewResume : this.resume  
+        }
+    },
+    watch:{
+        'currentUser.objectId': function(newValue, oldValue){
+            if(newValue){
+                this.getResume(this.currentUser)
+            }
+        }
     },
     methods: {
         onEdit(key,value){//修改的value放到resume中
@@ -115,13 +132,15 @@ let app= new Vue({
                 alert('保存失败')
             })
         },
-        getResume(){//通过id获取用户保存过的resume数据
+        getResume(user){//通过id获取用户保存过的resume数据
             var query= new AV.Query('User')
-            query.get(this.currentUser.objectId)
+            return query.get(user.objectId)
                 .then((user)=>{
                     let resume= user.toJSON().resume
                     // this.resume= resume
-                    Object.assign(this.resume, resume)
+                    // Object.assign(this.resume, resume)
+                    return resume  //return ,自己处理resume
+                    
                 }, (error)=>{
                 })
         },
@@ -132,8 +151,7 @@ let app= new Vue({
             this.resume.skills.splice(index, 1)//删除第index个
         },
         addProject(){
-                
-                this.resume.projects.push({name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'})
+            this.resume.projects.push({name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'})
         },
         removeProject(index){
             this.resume.projects.splice(index, 1)
@@ -146,5 +164,31 @@ let currentUser= AV.User.current()
 if(currentUser){
     app.currentUser= currentUser.toJSON()
     app.shareLink= location.origin + location.pathname + '?user_Id='+ app.currentUser.objectId
-    app.getResume() 
+    app.getResume(app.currentUser).then(resume=>{
+        app.resume= resume
+    }) 
 }
+//判断当前是预览用户还是 当前用户
+//如果是预览用户 用户id找地址中的user_id, 在寻找数据库中的resume
+//file:///F:/1.1-web/vue-resume/src/index.html?user_Id=5acb7cb117d009006197896c
+let search = location.search
+console.log(search)
+
+let regex = /user_Id=([^&]+)/
+let matches = search.match(regex)
+console.log(matches)
+let userId
+if(matches){
+    userId= matches[1]
+    app.mode= 'preview'
+    app.getResume({objectId: userId}).then(resume=>{
+        app.previewResume= resume
+    })
+}
+
+
+
+
+
+
+
