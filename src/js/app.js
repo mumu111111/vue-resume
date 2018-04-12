@@ -32,15 +32,9 @@ let app= new Vue({
             ]
         },
 
-        login:{
-            email: '',
-            password: ''
-        },
-        signUp:{
-            email: '',
-            password: ''
-        },
-        shareLink: '请编辑保存后再来查看',
+      
+        
+        shareLink: '',
         mode: 'edit' //preview
     },
     computed:{
@@ -51,8 +45,8 @@ let app= new Vue({
     watch:{
         'currentUser.objectId': function(newValue, oldValue){
             if(newValue){
-                this.getResume(this.currentUser)
-            }
+                this.getResume(this.currentUser).then(resume =>{ this.resume= resume })
+            }//loginSuccess()后， 监听 id 变动 ，自动获取resume
         }
     },
     methods: {
@@ -76,43 +70,33 @@ let app= new Vue({
         },
         hasLogin(){
             return !!this.currentUser.objectId
+            console.log(!!this.currentUser.objectId)
         },
-        onLogin(e){
-            AV.User.logIn(this.login.email,this.login.password)
-            .then((user)=>{
-                user= user.toJSON()//序列化user
-                this.currentUser.objectId= user.objectId//将数据库user的属性传给本地的currentUser中
-                this.currentUser.email= user.email
-                this.loginVisible= false
-                alert('登录成功')
-            },(error)=>{
-                if(error.code=== 211){
-                    alert('邮箱不存在')
-                }else if(error.code=== 210){
-                    alert('邮箱或密码不匹配')
-                }
-            })
+        onShare(){
+            if(this.hasLogin()){
+                shareVisible = true
+            }else{
+                alert('请先登录')
+            }
+        },
+        // hasShare(){
+        //     if(hasLogin()){
+        //         this.shareLink= app.currentUser.shareLink
+        //     }else{
+        //         alert('请先登录')
+        //     }
+        // },
+        onLogin(user){
+            this.currentUser.objectId = user.objectId
+            this.currentUser.email= user.email
+            this.loginVisible = false
         },
         onLogOut(){
             AV.User.logOut()
             alert('注销成功')
             window.location.reload()//重新加载
         },
-        onSignUp(e){
-            const user = new AV.User() //创建用户
-            user.setUsername(this.signUp.email)
-            user.setPassword(this.signUp.password)
-            user.setEmail(this.signUp.email)
-            user.signUp().then((user)=>{
-                alert('注册成功')
-                user= user.toJSON()
-                this.currentUser.objectId= user.objectId
-                this.currentUser.email= user.email
-                this.signUpVisible= false
-            },(error)=>{
-                alert(error.rawMessage)//返回错误描述
-            })
-        },
+        
         onClickSave(){
             let currentUser = AV.User.current()
             if(!currentUser){
