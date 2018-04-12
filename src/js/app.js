@@ -3,6 +3,7 @@ let app= new Vue({
     data:{
         editingName: false,
         loginVisible: false,
+        logoutVisible: false,
         signUpVisible:false,
         shareVisible: false,
         currentUser:{
@@ -70,22 +71,15 @@ let app= new Vue({
         },
         hasLogin(){
             return !!this.currentUser.objectId
-            console.log(!!this.currentUser.objectId)
+            this.logoutVisible= true
         },
         onShare(){
             if(this.hasLogin()){
-                shareVisible = true
+                this.shareVisible = true
             }else{
                 alert('请先登录')
             }
         },
-        // hasShare(){
-        //     if(hasLogin()){
-        //         this.shareLink= app.currentUser.shareLink
-        //     }else{
-        //         alert('请先登录')
-        //     }
-        // },
         onLogin(user){
             this.currentUser.objectId = user.objectId
             this.currentUser.email= user.email
@@ -127,18 +121,7 @@ let app= new Vue({
                 }, (error)=>{
                 })
         },
-        addSkill(){
-            this.resume.skills.push({name:'请填写技能名称',description:'请填写技能描述'})
-        },
-        removeSkill(index){
-            this.resume.skills.splice(index, 1)//删除第index个
-        },
-        addProject(){
-            this.resume.projects.push({name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'})
-        },
-        removeProject(index){
-            this.resume.projects.splice(index, 1)
-        },
+        
         print(){
             window.print()
         }
