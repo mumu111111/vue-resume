@@ -1,56 +1,61 @@
-let app= new Vue({
-    el: '#app',
-    data:{
-        editingName: false,
-        loginVisible: false,
-        logoutVisible: false,
-        signUpVisible:false,
-        shareVisible: false,
-        currentUser:{
-            objectId: undefined,
-            email: ''
-        },
-        previewUser:{//预览用户
-            objectId: undefined
-        },
-        previewResume:{},
-        resume:{
-            name: '姓名',
-            gender: '女',
-            birthday: '1994年4月',
-            jobTitle: '前端工程师',
-            phone: '13266666666',
-            email: 'example@example.com',
-            skills: [
-                {name: '请填写技能名称', description: '请填写技能描述'},
-                {name: '请填写技能名称', description: '请填写技能描述'},
-                {name: '请填写技能名称', description: '请填写技能描述'},
-                {name: '请填写技能名称', description: '请填写技能描述'},
-            ],
-            projects: [
-                {name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'},
-                {name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'}
-            ]
-        },
-
-      
-        
-        shareLink: '',
-        mode: 'edit' //preview
+window.App = {
+    template: `
+        <div class="wrapper">
+            <app-aside v-show="mode==='edit'"  :logout-visible='hasLogin()' @clicksave="onClickSave" @onshare="onShare" @print="print" @onlogout="onLogOut"></app-aside>
+            <main>
+                <resume :mode="mode" :display-resume="displayResume"></resume>
+            </main>
+            <button class="exitPreview" @click="mode='edit'" v-if="mode==='preview'">退出预览</button>
+        </div>
+    `,
+    data(){
+        return {
+            editingName: false,
+            loginVisible: false,
+            logoutVisible: false,
+            signUpVisible:false,
+            shareVisible: false,
+            currentUser:{
+                objectId: undefined,
+                email: ''
+            },
+            previewUser:{//预览用户
+                objectId: undefined
+            },
+            previewResume:{},
+            resume:{
+                name: '姓名',
+                gender: '女',
+                birthday: '1994年4月',
+                jobTitle: '前端工程师',
+                phone: '13266666666',
+                email: 'example@example.com',
+                skills: [
+                    {name: '请填写技能名称', description: '请填写技能描述'},
+                    {name: '请填写技能名称', description: '请填写技能描述'},
+                    {name: '请填写技能名称', description: '请填写技能描述'},
+                    {name: '请填写技能名称', description: '请填写技能描述'},
+                ],
+                projects: [
+                    {name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'},
+                    {name: '请填写项目名称', link: 'http://...', keywords: '请填写关键词', description: '请详细描述'}
+                ]
+            },
+            shareLink: '',
+            mode: 'edit' //preview
+    
+            
+        }
     },
+
     computed:{
         displayResume(){
             return this.mode==='preview'? this.previewResume : this.resume  
         }
     },
-    watch:{
-        'currentUser.objectId': function(newValue, oldValue){
-            if(newValue){
-                this.getResume(this.currentUser).then(resume =>{ this.resume= resume })
-            }//loginSuccess()后， 监听 id 变动 ，自动获取resume
-        }
-    },
-    methods: {
+
+    methods:{
+        
         onEdit(key,value){//修改的value放到resume中
             //key  =  skills[${index}].name = name值（字符串），并不是name
             let regex= /\[(\d+)\]/g 
@@ -75,7 +80,8 @@ let app= new Vue({
         },
         onShare(){
             if(this.hasLogin()){
-                this.shareVisible = true
+                // this.shareVisible = true
+                this.$router.push('/share')
             }else{
                 alert('请先登录')
             }
@@ -94,7 +100,8 @@ let app= new Vue({
         onClickSave(){
             let currentUser = AV.User.current()
             if(!currentUser){
-                this.loginVisible= true
+                // this.loginVisible= true
+                this.$router.push('/login') //用户不存在 需要登陆后保存
             }else{
                 this.saveResume()
             }
@@ -114,8 +121,6 @@ let app= new Vue({
             return query.get(user.objectId)
                 .then((user)=>{
                     let resume= user.toJSON().resume
-                    // this.resume= resume
-                    // Object.assign(this.resume, resume)
                     return resume  //return ,自己处理resume
                     
                 }, (error)=>{
@@ -127,37 +132,6 @@ let app= new Vue({
         }
         
     }
-})
-//获取当前用户
-let currentUser= AV.User.current()
-if(currentUser){
-    app.currentUser= currentUser.toJSON()
-    app.shareLink= location.origin + location.pathname + '?user_Id='+ app.currentUser.objectId
-    app.getResume(app.currentUser).then(resume=>{
-        app.resume= resume
-    }) 
-}
-//判断当前是预览用户还是 当前用户
-//如果是预览用户 用户id找地址中的user_id, 在寻找数据库中的resume
-//file:///F:/1.1-web/vue-resume/src/index.html?user_Id=5acb7cb117d009006197896c
-let search = location.search
-console.log(search)
-
-let regex = /user_Id=([^&]+)/
-let matches = search.match(regex)
-console.log(matches)
-let userId
-if(matches){
-    userId= matches[1]
-    app.mode= 'preview'
-    app.getResume({objectId: userId}).then(resume=>{
-        app.previewResume= resume
-    })
 }
 
-
-
-
-
-
-
+Vue.component('app', window.App)

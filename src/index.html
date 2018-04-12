@@ -14,20 +14,17 @@
 </head>
 
 <body>
-        <div class="page" id="app">
-                <app-aside v-show="mode==='edit'"  :logout-visible='hasLogin()' @clicksave="onClickSave" @onshare="onShare" @print="print" @onlogout="onLogOut"></app-aside>
-                <main>
-                    <resume :mode="mode" :display-resume="displayResume"></resume>
-                </main>
-                <login v-show="loginVisible" @loginsuccess="onLogin"  @close="loginVisible= false"></login>
+        <div class="page" id="root">
+            <router-view></router-view>
+                                <!-- <login v-show="loginVisible" @loginsuccess="onLogin"  @close="loginVisible= false"></login>
                 <sign-up v-show="signUpVisible"></sign-up>
-               <share v-show="shareVisible" :share-link="shareLink" @close="shareVisible=false"></share>
-                <button class="exitPreview" @click="mode='edit'" v-if="mode==='preview'">退出预览</button>
+               <share v-show="shareVisible" :share-link="shareLink" @close="shareVisible=false"></share> -->
             </div>
         
     <script src="../vendors/av-min.js"></script>
     <script src="./js/av.js"></script>
     <script src="../vendors/vue.min.js"></script>
+    <script src="../vendors/vue-router.min.js"></script>
     <script src="./js/editable-span.js"></script>
     <script src="./js/login.js"></script>
     <script src="./js/signUp.js"></script>
@@ -35,6 +32,7 @@
     <script src="./js/resume.js"></script>
     <script src="./js/aside.js"></script>
     <script src="./js/app.js"></script>
+    <script src="./js/router.js"></script>
 </body>
 
 </html>

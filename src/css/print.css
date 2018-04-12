@@ -1,7 +1,7 @@
-.page > aside{
+.page  aside{
     display: none;
 }
-.page{
+.page .wrapper{
     padding: 20px;
 }
 .skills .remove,
